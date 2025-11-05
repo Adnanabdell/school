@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الطلاب</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+    </style>
+</head>
+<body id="students-admin-page" class="bg-gray-50">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-900">لوحة تحكم الإدارة</h1>
+                <nav class="space-x-4 space-x-reverse">
+                    <a href="students.html" class="font-medium text-indigo-600 border-b-2 border-indigo-500 px-1 py-1 text-sm">إدارة الطلاب</a>
+                    <a href="teachers.html" class="font-medium text-gray-500 hover:text-gray-700 hover:border-b-2 hover:border-gray-300 px-1 py-1 text-sm">إدارة المعلمين</a>
+                    <a href="index.html" class="font-medium text-gray-500 hover:text-gray-700 px-1 py-1 text-sm">صفحة الحضور</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold">قائمة الطلاب</h2>
+                <button id="add-student-button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700">
+                    <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                    </svg>
+                    إضافة طالب جديد
+                </button>
+            </div>
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div id="admin-loader" class="text-center p-8">
+                    <svg class="animate-spin h-8 w-8 text-indigo-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p class="mt-2 text-gray-600">جاري التحميل...</p>
+                </div>
+                <div id="admin-student-list-container" class="overflow-x-auto">
+                    <!-- Admin student table will be injected here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Add/Edit Student -->
+    <div id="student-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">إضافة طالب جديد</h3>
+                <form id="student-form" class="mt-4 space-y-4 text-right">
+                    <input type="hidden" id="student-id">
+                    <input type="hidden" id="student-row-index">
+                    <div>
+                        <label for="student-name" class="block text-sm font-medium text-gray-700">الاسم واللقب</label>
+                        <input type="text" id="student-name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
+                    </div>
+                    <div>
+                        <label for="student-phone" class="block text-sm font-medium text-gray-700">رقم الهاتف</label>
+                        <input type="text" id="student-phone" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                     <div>
+                        <label for="student-class" class="block text-sm font-medium text-gray-700">القسم</label>
+                        <select id="student-class" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required>
+                            <!-- Options populated by JS -->
+                        </select>
+                    </div>
+                    <div class="items-center px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button type="submit" id="save-student-button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:ml-3 sm:w-auto sm:text-sm">
+                            حفظ
+                        </button>
+                        <button type="button" id="cancel-student-button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            إلغاء
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 px-6 py-3 rounded-lg text-white transition-opacity duration-300 opacity-0">
+        <p id="toast-message"></p>
+    </div>
+
+    <script src="./js/config.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>
